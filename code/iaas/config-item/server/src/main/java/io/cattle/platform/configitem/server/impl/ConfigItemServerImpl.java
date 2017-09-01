@@ -44,7 +44,15 @@ public class ConfigItemServerImpl implements ConfigItemServer, InitializationTas
     }
 
     protected ConfigItem retrieveItem(Request req) {
-        String itemName = req.getItemName() + "-" + req.getParams().get("arch").toString();
+        String itemName = req.getItemName();
+        Object archParam = req.getParams().get("arch");
+        if (archParam != null) {
+            String arch = archParam.toString();
+            if (arch.length() != 0) {
+                itemName += "-" + arch;
+            }
+        }
+
         ConfigItem item = itemRegistry.getConfigItem(itemName);
         return item;
     }
