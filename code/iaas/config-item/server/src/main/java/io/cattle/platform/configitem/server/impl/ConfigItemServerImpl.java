@@ -43,16 +43,21 @@ public class ConfigItemServerImpl implements ConfigItemServer, InitializationTas
         }
     }
 
+    protected ConfigItem retrieveItem(Request req) {
+        String itemName = req.getItemName() + "-" + req.getParams().get("arch").toString();
+        ConfigItem item = itemRegistry.getConfigItem(itemName);
+        return item;
+    }
+
     protected void handleApplied(Request req) {
         ItemVersion version = req.getAppliedVersion();
+        ConfigItem item = retrieveItem(req);
 
         if (!versionManager.isAssigned(req.getClient(), req.getItemName())) {
             log.error("Client [{}] is reporting applied on non-assigned item [{}]", req.getClient(), req.getItemName());
             req.setResponseCode(Request.NOT_FOUND);
             return;
         }
-
-        ConfigItem item = itemRegistry.getConfigItem(req.getItemName());
 
         if (version.isLatest()) {
             if (item == null) {
@@ -73,7 +78,7 @@ public class ConfigItemServerImpl implements ConfigItemServer, InitializationTas
     }
 
     protected void handleDownload(Request req) throws IOException {
-        ConfigItem item = itemRegistry.getConfigItem(req.getItemName());
+        ConfigItem item = retrieveItem(req);
 
         if (item == null) {
             log.info("Client [{}] requested unknown item [{}]", req.getClient(), req.getItemName());
