@@ -14,6 +14,7 @@ import io.cattle.platform.lock.LockManager;
 import io.cattle.platform.util.type.InitializationTask;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -45,7 +46,7 @@ public class ConfigItemServerImpl implements ConfigItemServer, InitializationTas
 
     protected ConfigItem retrieveItem(Request req) {
         String itemName = req.getItemName();
-        Object reqParams = req.getParams();
+        Map<String, Object> reqParams = req.getParams();
 
         // If architecture is specified, append it to `itemName`.
         if (reqParams != null) {
