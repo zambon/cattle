@@ -1,6 +1,19 @@
 #!/bin/bash
 set -e
 
+ARCH="$(uname -m)"
+case "$ARCH" in
+    x86_64)
+        ARCH="amd64"
+        ;;
+    ppc64le)
+        ;;
+    *)
+        echo "Unsupported architecture: '$ARCH'"
+        exit 1
+        ;;
+esac
+
 trap cleanup EXIT SIGINT SIGTERM
 
 # This is copied from common/scripts.sh, if there is a change here
@@ -73,8 +86,8 @@ download_agent()
     cleanup
 
     TEMP_DOWNLOAD=$(mktemp -d bootstrap.XXXXXXX)
-    info Downloading agent "${CATTLE_CONFIG_URL}${CONTENT_URL}"
-    curl --retry 5 -s -u $CATTLE_ACCESS_KEY:$CATTLE_SECRET_KEY ${CATTLE_CONFIG_URL}${CONTENT_URL} > $TEMP_DOWNLOAD/content
+    info Downloading agent "${CATTLE_CONFIG_URL}${CONTENT_URL}?arch=${ARCH}"
+    curl --retry 5 -s -u $CATTLE_ACCESS_KEY:$CATTLE_SECRET_KEY ${CATTLE_CONFIG_URL}${CONTENT_URL}?arch=${ARCH} > $TEMP_DOWNLOAD/content
     tar xzf $TEMP_DOWNLOAD/content -C $TEMP_DOWNLOAD || ( cat $TEMP_DOWNLOAD/content 1>&2 && exit 1 )
     bash $TEMP_DOWNLOAD/*/config.sh --force $INSTALL_ITEMS
 }
