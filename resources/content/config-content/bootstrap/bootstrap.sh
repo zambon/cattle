@@ -46,7 +46,7 @@ CONF=(/etc/cattle/agent/bootstrap.conf
       ${CATTLE_HOME}/etc/cattle/agent/bootstrap.conf
       /var/lib/rancher/etc/agent.conf)
 CONTENT_URL=/configcontent/configscripts
-INSTALL_ITEMS="configscripts pyagent"
+INSTALL_ITEMS="configscripts pyagent-${ARCH}"
 REQUIRED_IMAGE=
 DETECTED_CATTLE_AGENT_IP=
 
