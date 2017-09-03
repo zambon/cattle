@@ -2,19 +2,6 @@
 
 set -e
 
-ARCH="$(uname -m)"
-case "$ARCH" in
-    x86_64)
-        ARCH="amd64"
-        ;;
-    ppc64le)
-        ;;
-    *)
-        echo "Unsupported architecture: '$ARCH'"
-        exit 1
-        ;;
-esac
-
 source $(dirname $0)/common/scripts.sh
 
 cleanup()
@@ -128,9 +115,9 @@ download()
         fi
     fi
 
-    info Downloading $DOWNLOAD_URL "current=${current}&arch=${ARCH}"
+    info Downloading $DOWNLOAD_URL "current=${current}"
 
-    get $get_opts "$DOWNLOAD_URL?current=${current}&arch=${ARCH}" > $DOWNLOAD_TEMP/download
+    get $get_opts "$DOWNLOAD_URL?current=${current}" > $DOWNLOAD_TEMP/download
     HEADER=$(cat $DOWNLOAD_TEMP/download | head -n1)
     if [[ "$HEADER" =~ version:* ]]; then
         archive_version=$(echo $HEADER | cut -f2 -d:)
@@ -239,8 +226,8 @@ apply()
 
 applied()
 {
-    info Sending $1 applied ${dir} ${VERSION} ${ARCH}
-    put "${DOWNLOAD_URL}?version=${VERSION}&arch=${ARCH}" > /dev/null
+    info Sending $1 applied ${dir} ${VERSION}
+    put "${DOWNLOAD_URL}?version=${VERSION}" > /dev/null
 }
 
 dump()
