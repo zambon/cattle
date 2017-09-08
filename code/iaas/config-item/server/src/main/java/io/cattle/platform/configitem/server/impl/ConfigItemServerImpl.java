@@ -14,7 +14,6 @@ import io.cattle.platform.lock.LockManager;
 import io.cattle.platform.util.type.InitializationTask;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.inject.Inject;
 
